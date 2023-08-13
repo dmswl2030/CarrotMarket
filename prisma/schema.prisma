@@ -31,6 +31,8 @@ model Token {
   userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model Product {
@@ -44,6 +46,8 @@ model Product {
   price       Int
   description String   @db.MediumText
   Fav         Fav[]
+
+  @@index([userId])
 }
 
 model Fav {
@@ -54,4 +58,46 @@ model Fav {
   productId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([productId])
+}
+
+//MiniTweet 추가
+
+model MiniTweetUser {
+  id        Int              @id @default(autoincrement())
+  name      String
+  email     String           @unique
+  avatar    String?
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  likes     MiniTweetLike[]
+  tweets    MiniTweetTweet[]
+}
+
+model MiniTweetTweet {
+  id        Int             @id @default(autoincrement())
+  text      String
+  createdAt DateTime        @default(now())
+  updatedAt DateTime?       @updatedAt
+  userId    Int
+  user      MiniTweetUser   @relation(fields: [userId], references: [id])
+  likes     MiniTweetLike[]
+  views     Int             @default(0)
+
+  @@index([userId], name: "userId")
+}
+
+model MiniTweetLike {
+  id        Int            @id @default(autoincrement())
+  createdAt DateTime       @default(now())
+  updatedAt DateTime?      @updatedAt
+  tweet     MiniTweetTweet @relation(fields: [tweetId], references: [id])
+  tweetId   Int
+  user      MiniTweetUser  @relation(fields: [userId], references: [id])
+  userId    Int
+
+  @@index([userId], name: "userId")
+  @@index([tweetId], name: "tweetId")
 }
