@@ -33,7 +33,6 @@ async function handler(
         user: { connect: { id: user?.id } },
       },
     });
-    console.log(product, "dsdsds");
     res.json({
       ok: true,
       product,
