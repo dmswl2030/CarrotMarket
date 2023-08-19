@@ -2,21 +2,37 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import Layout from "@components/layout";
 import useUser from "@libs/client/useUser";
+import { useRouter } from "next/router";
 
 const Profile: NextPage = () => {
   const { user } = useUser();
+  const router = useRouter();
+  const handleLogout = async () => {
+    await fetch("/api/users/logout");
+    router.reload();
+  };
   console.log(user);
   return (
     <Layout hasTabBar title="나의 캐럿">
       <div className="px-4">
-        <div className="flex items-center mt-4 space-x-3">
-          <div className="w-16 h-16 bg-slate-500 rounded-full" />
-          <div className="flex flex-col">
-            <span className="font-medium text-gray-900">Steve Jebs</span>
-            <Link href="/profile/edit" className="text-sm text-gray-700">
-              Edit profile &rarr;
-            </Link>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center mt-4 space-x-3">
+            <div className="w-16 h-16 bg-slate-500 rounded-full" />
+
+            <div className="flex flex-col">
+              <span className="font-medium text-gray-900">Steve Jebs</span>
+              <Link href="/profile/edit" className="text-sm text-gray-700">
+                Edit profile &rarr;
+              </Link>
+            </div>
           </div>
+
+          <button
+            className="font-extrabold border-2 rounded-3xl px-3 py-2 mt-2 text-red-500"
+            onClick={handleLogout}
+          >
+            LogOut
+          </button>
         </div>
         <div className="mt-10 flex justify-around">
           <Link href="/profile/sold" className="flex flex-col items-center">
